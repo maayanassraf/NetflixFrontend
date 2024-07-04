@@ -32,16 +32,15 @@ jobs:
       - name: Update YAML manifests
         run: |
            cd ./NetflixInfra
-          # TODO commit & push changes to infra repo
-          NETFLIX_FRONTEND_IMAGE=maayanassraf/netflix-frontend:${{ github.run_number }}
-          sed -i "s#^\(.*image: \).*#\1$NETFLIX_FRONTEND_IMAGE#" k8s/NetflixFrontend/frontend.yaml
-
+           # TODO commit & push changes to infra repo
+           NETFLIX_FRONTEND_IMAGE=maayanassraf/netflix-frontend:${{ github.run_number }}
+           sed -i "s#^\(.*image: \).*#\1$NETFLIX_FRONTEND_IMAGE#" k8s/NetflixFrontend/frontend.yaml
 
       - name: Commit and Push changes
         run: |
            cd ./NetflixInfra
-          # TODO commit & push changes to infra repo
-          git config user.name 'maayanassraf'
-          git config user.email 'maayanassraf@gmail.com'
-          git commit -m "changing netflix frontend version"
-          git push
+           # TODO commit & push changes to infra repo
+           git config user.name 'maayanassraf'
+           git config user.email 'maayanassraf@gmail.com'
+           git commit -m "changing netflix frontend version"
+           git push
