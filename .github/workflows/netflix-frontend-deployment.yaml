@@ -1,0 +1,47 @@
+name: NetflixFrontend stack build-deploy
+
+on:
+  push:
+    branches:
+     - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and push docker images
+        run: |
+           # Login to docker & Building new image
+           docker login -u ${{ secrets.DOCKER_REPO_USERNAME }} -p ${{ secrets.DOCKER_REPO_PASSWORD }}
+           NETFLIX_FRONTEND_IMAGE=maayanassraf/netflix-frontend:${{ github.run_number }}
+           docker build -t $NETFLIX_FRONTEND_IMAGE .
+           docker push $NETFLIX_FRONTEND_IMAGE
+
+      - name: Checkout infrastructure repo
+        uses: actions/checkout@v3
+        with:
+          repository: maayanassraf/NetflixInfra
+          token: ${{ secrets.REPO_TOKEN }}  # The GITHUB_TOKEN secret is a GitHub access token.
+          path: ./NetflixInfra
+
+      - name: Update YAML manifests
+        run: |
+           cd ./NetflixInfra
+          # TODO commit & push changes to infra repo
+          NETFLIX_FRONTEND_IMAGE=maayanassraf/netflix-frontend:${{ github.run_number }}
+          sed -i "s#^\(.*image: \).*#\1$NETFLIX_FRONTEND_IMAGE#" k8s/NetflixFrontend/frontend.yaml
+
+
+      - name: Commit and Push changes
+        run: |
+           cd ./NetflixInfra
+          # TODO commit & push changes to infra repo
+          git config user.name 'maayanassraf'
+          git config user.email 'maayanassraf@gmail.com'
+          git commit -m "changing netflix frontend version"
+          git push
