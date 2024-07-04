@@ -42,5 +42,6 @@ jobs:
            # TODO commit & push changes to infra repo
            git config user.name 'maayanassraf'
            git config user.email 'maayanassraf@gmail.com'
+           git add .
            git commit -m "changing netflix frontend version"
            git push
