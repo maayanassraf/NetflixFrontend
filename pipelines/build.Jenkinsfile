@@ -45,5 +45,14 @@ pipeline {
                 '''
             }
         }
+
+        stage('Trigger Deploy') {
+            steps {
+                build job: '<deploy-pipeline-name-here>', wait: false, parameters: [
+                    string(name: 'SERVICE_NAME', value: "NetflixFrontend")
+                    string(name: 'IMAGE_FULL_NAME_PARAM', value: "$IMAGE_FULL_NAME")
+                ]
+            }
+        }
     }
 }
